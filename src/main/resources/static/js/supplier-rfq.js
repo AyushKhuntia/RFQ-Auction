@@ -51,6 +51,11 @@ async function loadRfqDetails() {
         document.getElementById('rfq-status-text').textContent =
             `RFQ #${data.rfqId} · By ${data.buyerName}`;
 
+        // Bid Start Time
+        if (data.bidStartTime) {
+            document.getElementById('stat-start').textContent = new Date(data.bidStartTime).toLocaleString();
+        }
+
         // Config
         if (data.auctionConfig) {
             document.getElementById('config-x').textContent = data.auctionConfig.triggerWindowMinutes;

@@ -38,6 +38,7 @@ async function loadBuyerRfqs() {
                                rfq.status === 'FORCE_CLOSED' ? 'badge-force-closed' : 'badge-closed';
             const statusText = rfq.status.replace('_', ' ');
 
+            const startTime = new Date(rfq.bidStartTime).toLocaleString();
             const closeTime = new Date(rfq.bidCloseTime).toLocaleString();
             const forcedTime = new Date(rfq.forcedCloseTime).toLocaleString();
 
@@ -48,6 +49,10 @@ async function loadBuyerRfqs() {
                         <span class="badge ${statusClass}">${statusText}</span>
                     </div>
                     <div class="rfq-card-meta">
+                        <div class="rfq-meta-item">
+                            <span class="label">🟢 Bid Start</span>
+                            <span class="value" style="color:var(--accent-green);font-weight:600">${startTime}</span>
+                        </div>
                         <div class="rfq-meta-item">
                             <span class="label">Bid Close</span>
                             <span class="value">${closeTime}</span>

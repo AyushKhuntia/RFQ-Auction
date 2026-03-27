@@ -30,6 +30,7 @@ async function loadAvailableRfqs() {
         document.getElementById('stat-joined').textContent = joined;
 
         grid.innerHTML = rfqs.map(rfq => {
+            const startTime = new Date(rfq.bidStartTime).toLocaleString();
             const closeTime = new Date(rfq.bidCloseTime).toLocaleString();
             const isJoined = rfq.joined;
 
@@ -43,6 +44,10 @@ async function loadAvailableRfqs() {
                         <div class="rfq-meta-item">
                             <span class="label">Buyer</span>
                             <span class="value">${rfq.buyerName}</span>
+                        </div>
+                        <div class="rfq-meta-item">
+                            <span class="label">🟢 Bid Start</span>
+                            <span class="value" style="color:var(--accent-green);font-weight:600">${startTime}</span>
                         </div>
                         <div class="rfq-meta-item">
                             <span class="label">Bid Close</span>
@@ -85,7 +90,7 @@ async function joinRfq(rfqId, event) {
         if (!res.ok) throw new Error(data.error || 'Failed to join');
 
         showToast('✅ Successfully joined the auction!');
-        loadAvailableRfqs(); // Reload
+        loadAvailableRfqs();
     } catch (err) {
         showToast('❌ ' + err.message);
     }

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.gocomat.rfq.RfqApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 44.51 s -- in com.gocomat.rfq.RfqApplicationTests

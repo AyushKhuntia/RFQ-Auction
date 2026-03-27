@@ -41,10 +41,16 @@
             <div class="text" id="extension-text">Auction time extended!</div>
         </div>
 
-        <!-- Timer -->
-        <div class="timer-container">
-            <div class="timer-label">Time Remaining</div>
-            <div class="timer-value" id="countdown-timer">--:--:--</div>
+        <!-- Start Time + Timer -->
+        <div class="stats-row" style="grid-template-columns: 1fr 1fr;">
+            <div class="stat-card">
+                <div class="stat-value" id="stat-start" style="font-size:16px">--</div>
+                <div class="stat-label">🟢 Bid Start Time</div>
+            </div>
+            <div class="timer-container" style="margin-bottom:0">
+                <div class="timer-label">Time Remaining</div>
+                <div class="timer-value" id="countdown-timer">--:--:--</div>
+            </div>
         </div>
 
         <div class="detail-grid">

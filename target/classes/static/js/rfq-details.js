@@ -38,6 +38,11 @@ async function loadRfqDetails() {
         document.getElementById('rfq-status-text').textContent =
             `RFQ #${data.rfqId} · Created by ${data.buyerName}`;
 
+        // Bid Start Time
+        if (data.bidStartTime) {
+            document.getElementById('stat-start').textContent = new Date(data.bidStartTime).toLocaleString();
+        }
+
         // Config
         if (data.auctionConfig) {
             document.getElementById('config-x').textContent = data.auctionConfig.triggerWindowMinutes;
@@ -120,7 +125,6 @@ function startCountdown(status) {
         const formatted = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         document.getElementById('countdown-timer').textContent = formatted;
 
-        // Urgent if less than 5 minutes
         if (diff < 300000) {
             document.getElementById('countdown-timer').classList.add('urgent');
         } else {
@@ -170,7 +174,7 @@ function renderActivityLog(logs) {
 function connectWebSocket() {
     const socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
-    stompClient.debug = null; // Suppress debug logs
+    stompClient.debug = null;
 
     stompClient.connect({}, function (frame) {
         console.log('WebSocket connected');
@@ -181,7 +185,6 @@ function connectWebSocket() {
         });
     }, function (error) {
         console.error('WebSocket error:', error);
-        // Reconnect after 3 seconds
         setTimeout(connectWebSocket, 3000);
     });
 }
@@ -204,7 +207,6 @@ function handleUpdate(update) {
         bidCloseTime = new Date(update.newCloseTime);
         startCountdown('ACTIVE');
 
-        // Show extension banner
         const banner = document.getElementById('extension-banner');
         document.getElementById('extension-text').textContent = update.message;
         banner.classList.add('show');
@@ -217,6 +219,5 @@ function handleUpdate(update) {
         document.getElementById('countdown-timer').classList.remove('urgent');
     }
 
-    // Reload activity log
     loadActivityLog();
 }
