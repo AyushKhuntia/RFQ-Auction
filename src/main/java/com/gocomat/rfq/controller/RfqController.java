@@ -69,4 +69,14 @@ public class RfqController {
     public ResponseEntity<?> getAvailableRfqsForSupplier(@PathVariable Long supplierId) {
         return ResponseEntity.ok(rfqService.getAvailableRfqsForSupplier(supplierId));
     }
+
+    @DeleteMapping("/{rfqId}")
+    public ResponseEntity<?> deleteRfq(@PathVariable Long rfqId, @RequestParam Long buyerId) {
+        try {
+            rfqService.deleteRfq(rfqId, buyerId);
+            return ResponseEntity.ok(Map.of("message", "RFQ deleted successfully"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
 }

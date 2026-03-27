@@ -24,6 +24,9 @@ async function loadBuyerRfqs() {
             return;
         }
 
+        emptyState.style.display = 'none';
+        grid.style.display = '';
+
         // Stats
         const total = rfqs.length;
         const active = rfqs.filter(r => r.status === 'ACTIVE').length;
@@ -43,7 +46,7 @@ async function loadBuyerRfqs() {
             const forcedTime = new Date(rfq.forcedCloseTime).toLocaleString();
 
             return `
-                <div class="rfq-card" onclick="window.location.href='rfq-details.html?id=${rfq.rfqId}'">
+                <div class="rfq-card">
                     <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
                         <div class="rfq-card-title">${rfq.rfqName}</div>
                         <span class="badge ${statusClass}">${statusText}</span>
@@ -68,7 +71,10 @@ async function loadBuyerRfqs() {
                     </div>
                     <div class="rfq-card-footer">
                         <span style="color:var(--text-muted);font-size:13px">RFQ #${rfq.rfqId}</span>
-                        <span class="btn btn-secondary btn-sm">View Details →</span>
+                        <div style="display:flex;gap:8px">
+                            <button class="btn btn-danger btn-sm" onclick="deleteRfq(${rfq.rfqId}, event)" title="Delete RFQ">🗑️ Delete</button>
+                            <a href="rfq-details.html?id=${rfq.rfqId}" class="btn btn-secondary btn-sm">View Details →</a>
+                        </div>
                     </div>
                 </div>
             `;
@@ -76,5 +82,27 @@ async function loadBuyerRfqs() {
 
     } catch (err) {
         console.error('Failed to load RFQs:', err);
+    }
+}
+
+async function deleteRfq(rfqId, event) {
+    event.stopPropagation();
+
+    if (!confirm('Are you sure you want to delete this RFQ? This will remove all bids, participations, and activity logs. This action cannot be undone.')) {
+        return;
+    }
+
+    const user = getUser();
+    try {
+        const res = await fetch(`/api/rfq/${rfqId}?buyerId=${user.id}`, {
+            method: 'DELETE'
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to delete RFQ');
+
+        showToast('✅ RFQ deleted successfully!');
+        loadBuyerRfqs(); // Reload
+    } catch (err) {
+        showToast('❌ ' + err.message);
     }
 }

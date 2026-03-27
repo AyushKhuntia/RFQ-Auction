@@ -221,3 +221,26 @@ function handleUpdate(update) {
 
     loadActivityLog();
 }
+
+// ====== DELETE RFQ ======
+async function deleteThisRfq() {
+    if (!confirm('Are you sure you want to delete this RFQ? This will remove all bids, participations, and activity logs. This action cannot be undone.')) {
+        return;
+    }
+
+    const user = getUser();
+    try {
+        const res = await fetch(`/api/rfq/${rfqId}?buyerId=${user.id}`, {
+            method: 'DELETE'
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to delete RFQ');
+
+        showToast('✅ RFQ deleted successfully!');
+        setTimeout(() => {
+            window.location.href = 'buyer-dashboard.html';
+        }, 1000);
+    } catch (err) {
+        showToast('❌ ' + err.message);
+    }
+}

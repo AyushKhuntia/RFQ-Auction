@@ -20,6 +20,7 @@ public class RfqService {
     private final ParticipationRepository participationRepository;
     private final SupplierRepository supplierRepository;
     private final BidRepository bidRepository;
+    private final ActivityLogRepository activityLogRepository;
 
     @Transactional
     public Rfq createRfq(RfqCreateRequest request) {
@@ -185,5 +186,22 @@ public class RfqService {
             result.add(map);
         }
         return result;
+    }
+
+    @Transactional
+    public void deleteRfq(Long rfqId, Long buyerId) {
+        Rfq rfq = getRfqById(rfqId);
+
+        // Only the buyer who created it can delete
+        if (!rfq.getBuyer().getBuyerId().equals(buyerId)) {
+            throw new RuntimeException("Only the buyer who created this RFQ can delete it");
+        }
+
+        // Delete in order: activity logs → bids → participations → auction config → RFQ
+        activityLogRepository.deleteAll(activityLogRepository.findByRfqRfqIdOrderByCreatedAtDesc(rfqId));
+        bidRepository.deleteAll(bidRepository.findByRfqRfqIdOrderByAmountAsc(rfqId));
+        participationRepository.deleteAll(participationRepository.findByRfqRfqId(rfqId));
+        auctionConfigRepository.findByRfqRfqId(rfqId).ifPresent(auctionConfigRepository::delete);
+        rfqRepository.delete(rfq);
     }
 }
