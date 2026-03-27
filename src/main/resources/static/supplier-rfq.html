@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Supplier Bidding Page - Submit and track your bids in real-time">
+    <title>RFQ Auction - Place Bid</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="supplier-dashboard.html" class="navbar-brand">
+            <div class="logo">⚡</div>
+            <h1>RFQ Auction</h1>
+        </a>
+        <div class="navbar-right">
+            <a href="supplier-dashboard.html" class="btn btn-secondary btn-sm">← Back to Dashboard</a>
+            <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+                <h1 id="rfq-title">Loading...</h1>
+                <p id="rfq-status-text">Loading auction...</p>
+            </div>
+            <div id="rfq-status-badge"></div>
+        </div>
+
+        <!-- Extension Banner -->
+        <div class="extension-banner" id="extension-banner">
+            <div class="icon">⏰</div>
+            <div class="text" id="extension-text">Auction time extended!</div>
+        </div>
+
+        <!-- Timer -->
+        <div class="timer-container">
+            <div class="timer-label">Time Remaining</div>
+            <div class="timer-value" id="countdown-timer">--:--:--</div>
+        </div>
+
+        <div class="detail-grid">
+            <!-- Left: Bid Form + Rankings -->
+            <div>
+                <!-- Bid Form -->
+                <div class="card" style="margin-bottom:24px" id="bid-form-card">
+                    <div class="card-header">
+                        <h3>💰 Submit Your Bid</h3>
+                    </div>
+
+                    <div class="alert alert-error" id="alert-error"></div>
+                    <div class="alert alert-success" id="alert-success"></div>
+
+                    <form id="bid-form" onsubmit="handlePlaceBid(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Freight Charges (₹)</label>
+                                <input type="number" step="0.01" class="form-control" id="freight-charges" placeholder="0.00" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Origin Charges (₹)</label>
+                                <input type="number" step="0.01" class="form-control" id="origin-charges" placeholder="0.00" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Destination Charges (₹)</label>
+                                <input type="number" step="0.01" class="form-control" id="destination-charges" placeholder="0.00" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Total Amount (₹)</label>
+                                <input type="text" class="form-control" id="total-amount" value="₹ 0.00" readonly style="font-weight:700;color:var(--accent-cyan)">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Transit Time</label>
+                                <input type="text" class="form-control" id="transit-time" placeholder="e.g. 3-5 days" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Quote Validity</label>
+                                <input type="text" class="form-control" id="quote-validity" placeholder="e.g. 30 days" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-lg" style="width:100%" id="submit-bid-btn">🚀 Place Bid</button>
+                    </form>
+                </div>
+
+                <!-- Rankings Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📊 Supplier Rankings</h3>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Supplier</th>
+                                    <th>Total Amount</th>
+                                    <th>Freight</th>
+                                    <th>Origin</th>
+                                    <th>Destination</th>
+                                    <th>Transit</th>
+                                    <th>Validity</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bids-table-body">
+                                <tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:40px">No bids yet</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Activity Log + Config -->
+            <div>
+                <!-- Config -->
+                <div class="card" style="margin-bottom:24px">
+                    <div class="card-header">
+                        <h3>⚙️ Auction Config</h3>
+                    </div>
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <div class="config-value" id="config-x">--</div>
+                            <div class="config-label">Trigger (X min)</div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-value" id="config-y">--</div>
+                            <div class="config-label">Extension (Y min)</div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-value" id="config-trigger" style="font-size:12px">--</div>
+                            <div class="config-label">Trigger Type</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Log -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📜 Activity Log</h3>
+                    </div>
+                    <div class="activity-log" id="activity-log">
+                        <div class="empty-state" style="padding:30px">
+                            <p style="color:var(--text-muted)">No activity yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/supplier-rfq.js"></script>
+</body>
+</html>

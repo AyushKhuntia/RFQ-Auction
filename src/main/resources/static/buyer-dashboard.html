@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Buyer Dashboard - Manage your RFQ auctions">
+    <title>RFQ Auction - Buyer Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="buyer-dashboard.html" class="navbar-brand">
+            <div class="logo">⚡</div>
+            <h1>RFQ Auction</h1>
+        </a>
+        <div class="navbar-right">
+            <div class="navbar-user">Welcome, <span id="user-name">Buyer</span></div>
+            <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+                <h1>📋 My RFQ Auctions</h1>
+                <p>Manage your British Auction RFQs and monitor supplier bids in real-time</p>
+            </div>
+            <a href="create-rfq.html" class="btn btn-primary">+ Create RFQ</a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row" id="stats-row">
+            <div class="stat-card">
+                <div class="stat-value" id="stat-total">0</div>
+                <div class="stat-label">Total RFQs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-active">0</div>
+                <div class="stat-label">Active Auctions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-closed">0</div>
+                <div class="stat-label">Closed</div>
+            </div>
+        </div>
+
+        <!-- RFQ Grid -->
+        <div class="rfq-grid" id="rfq-grid">
+            <!-- Cards injected by JS -->
+        </div>
+
+        <div class="empty-state" id="empty-state" style="display:none">
+            <div class="icon">📦</div>
+            <h3>No RFQs Yet</h3>
+            <p>Create your first RFQ with British Auction to start receiving bids!</p>
+            <br>
+            <a href="create-rfq.html" class="btn btn-primary">Create RFQ</a>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/buyer.js"></script>
+</body>
+</html>

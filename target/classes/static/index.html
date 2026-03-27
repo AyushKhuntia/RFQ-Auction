@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RFQ British Auction System - Login to access supplier or buyer dashboard">
+    <title>RFQ Auction - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo-large">⚡</div>
+                <h1>RFQ Auction</h1>
+                <p>British Auction Bidding System</p>
+            </div>
+
+            <!-- Tabs: Login / Register -->
+            <div class="tabs">
+                <button class="tab active" id="tab-login" onclick="switchTab('login')">Login</button>
+                <button class="tab" id="tab-register" onclick="switchTab('register')">Register</button>
+            </div>
+
+            <!-- Role Toggle -->
+            <div class="role-toggle">
+                <button class="role-btn active" id="role-buyer" onclick="selectRole('BUYER')">🏢 Buyer</button>
+                <button class="role-btn" id="role-supplier" onclick="selectRole('SUPPLIER')">🏭 Supplier</button>
+            </div>
+
+            <!-- Alerts -->
+            <div class="alert alert-error" id="alert-error"></div>
+            <div class="alert alert-success" id="alert-success"></div>
+
+            <!-- Login Form -->
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="login-email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" id="login-password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width:100%">Login</button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" style="display:none" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" class="form-control" id="reg-name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="reg-email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" id="reg-password" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width:100%">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

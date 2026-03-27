@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create a new RFQ with British Auction configuration">
+    <title>RFQ Auction - Create RFQ</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="buyer-dashboard.html" class="navbar-brand">
+            <div class="logo">⚡</div>
+            <h1>RFQ Auction</h1>
+        </a>
+        <div class="navbar-right">
+            <div class="navbar-user">Welcome, <span id="user-name">Buyer</span></div>
+            <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width:800px">
+        <div class="page-header">
+            <h1>🆕 Create New RFQ</h1>
+            <p>Set up a British Auction with custom configuration for supplier bidding</p>
+        </div>
+
+        <div class="alert alert-error" id="alert-error"></div>
+        <div class="alert alert-success" id="alert-success"></div>
+
+        <form id="create-rfq-form" onsubmit="handleCreateRfq(event)">
+            <div class="card" style="margin-bottom:24px">
+                <div class="card-header">
+                    <h2>📄 RFQ Details</h2>
+                </div>
+                <div class="form-group">
+                    <label>RFQ Name / Reference ID</label>
+                    <input type="text" class="form-control" id="rfq-name" placeholder="e.g. Transport Mumbai-Delhi Q1" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Bid Start Date & Time</label>
+                        <input type="datetime-local" class="form-control" id="bid-start" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Bid Close Date & Time</label>
+                        <input type="datetime-local" class="form-control" id="bid-close" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Forced Bid Close Date & Time</label>
+                        <input type="datetime-local" class="form-control" id="forced-close" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Service / Pickup Date</label>
+                        <input type="datetime-local" class="form-control" id="service-date">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom:24px">
+                <div class="card-header">
+                    <h2>⚙️ British Auction Configuration</h2>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Trigger Window (X Minutes)</label>
+                        <input type="number" class="form-control" id="trigger-window" placeholder="e.g. 10" min="1" required>
+                        <small style="color:var(--text-muted);font-size:11px;margin-top:4px;display:block">Minutes before close to monitor bidding activity</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Extension Duration (Y Minutes)</label>
+                        <input type="number" class="form-control" id="extension-duration" placeholder="e.g. 5" min="1" required>
+                        <small style="color:var(--text-muted);font-size:11px;margin-top:4px;display:block">Extra time added when trigger condition occurs</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Extension Trigger Type</label>
+                    <select class="form-control" id="trigger-type" required>
+                        <option value="BID_RECEIVED">Bid Received in Last X Minutes</option>
+                        <option value="ANY_RANK_CHANGE">Any Supplier Rank Change in Last X Minutes</option>
+                        <option value="L1_CHANGE">Lowest Bidder (L1) Change in Last X Minutes</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg" style="width:100%">🚀 Create RFQ & Start Auction</button>
+        </form>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/create-rfq.js"></script>
+</body>
+</html>

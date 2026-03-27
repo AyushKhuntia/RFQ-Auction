@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  # ---- Oracle Database ----
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: rfq-oracle-db
+    environment:
+      ORACLE_PASSWORD: ayush # SYS / SYSTEM password
+      APP_USER: rfquser
+      APP_USER_PASSWORD: rfqpass
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: [ "CMD-SHELL", "healthcheck.sh" ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s # Oracle takes time to initialise
+
+  # ---- Spring Boot App ----
+  rfq-app:
+    build: .
+    container_name: rfq-auction-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@//oracle-db:1521/XEPDB1
+      SPRING_DATASOURCE_USERNAME: system
+      SPRING_DATASOURCE_PASSWORD: ayush
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.OracleDialect
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    restart: on-failure
+
+volumes:
+  oracle-data:

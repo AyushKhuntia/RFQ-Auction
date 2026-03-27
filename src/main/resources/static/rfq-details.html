@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RFQ Auction Details - Live bidding and supplier rankings">
+    <title>RFQ Auction - Auction Details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="buyer-dashboard.html" class="navbar-brand">
+            <div class="logo">⚡</div>
+            <h1>RFQ Auction</h1>
+        </a>
+        <div class="navbar-right">
+            <a href="buyer-dashboard.html" class="btn btn-secondary btn-sm">← Back to Dashboard</a>
+            <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+                <h1 id="rfq-title">Loading...</h1>
+                <p id="rfq-status-text">Loading auction details...</p>
+            </div>
+            <div id="rfq-status-badge"></div>
+        </div>
+
+        <!-- Extension Banner -->
+        <div class="extension-banner" id="extension-banner">
+            <div class="icon">⏰</div>
+            <div class="text" id="extension-text">Auction time extended!</div>
+        </div>
+
+        <!-- Timer + Stats -->
+        <div class="stats-row">
+            <div class="timer-container">
+                <div class="timer-label">Time Remaining</div>
+                <div class="timer-value" id="countdown-timer">--:--:--</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-bids">0</div>
+                <div class="stat-label">Total Bids</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-lowest">--</div>
+                <div class="stat-label">Lowest Bid (₹)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-suppliers">0</div>
+                <div class="stat-label">Suppliers</div>
+            </div>
+        </div>
+
+        <!-- Auction Config -->
+        <div class="card" style="margin-bottom:24px">
+            <div class="card-header">
+                <h3>⚙️ British Auction Configuration</h3>
+            </div>
+            <div class="config-grid">
+                <div class="config-item">
+                    <div class="config-value" id="config-x">--</div>
+                    <div class="config-label">Trigger Window (X min)</div>
+                </div>
+                <div class="config-item">
+                    <div class="config-value" id="config-y">--</div>
+                    <div class="config-label">Extension Duration (Y min)</div>
+                </div>
+                <div class="config-item">
+                    <div class="config-value" id="config-trigger" style="font-size:14px">--</div>
+                    <div class="config-label">Trigger Type</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="detail-grid">
+            <!-- Bids Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>📊 Supplier Rankings & Bids</h3>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Supplier</th>
+                                <th>Total Amount</th>
+                                <th>Freight</th>
+                                <th>Origin</th>
+                                <th>Destination</th>
+                                <th>Transit</th>
+                                <th>Validity</th>
+                                <th>Bid Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bids-table-body">
+                            <tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:40px">No bids yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Activity Log -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>📜 Activity Log</h3>
+                </div>
+                <div class="activity-log" id="activity-log">
+                    <div class="empty-state" style="padding:30px">
+                        <p style="color:var(--text-muted)">No activity yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/rfq-details.js"></script>
+</body>
+</html>
