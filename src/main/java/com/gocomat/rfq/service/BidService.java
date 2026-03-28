@@ -46,7 +46,8 @@ public class BidService {
         }
 
         // Check supplier participation
-        if (!participationRepository.existsByRfqRfqIdAndSupplierSupplierId(request.getRfqId(), request.getSupplierId())) {
+        if (!participationRepository.existsByRfqRfqIdAndSupplierSupplierId(request.getRfqId(),
+                request.getSupplierId())) {
             throw new RuntimeException("Supplier has not joined this RFQ");
         }
 
@@ -123,7 +124,8 @@ public class BidService {
 
     private void checkAndExtendAuction(Rfq rfq, boolean anyRankChanged, boolean l1Changed) {
         AuctionConfig config = rfq.getAuctionConfig();
-        if (config == null) return;
+        if (config == null)
+            return;
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime triggerStart = rfq.getBidCloseTime().minusMinutes(config.getTriggerWindowMinutes());

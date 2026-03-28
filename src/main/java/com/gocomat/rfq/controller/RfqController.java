@@ -54,7 +54,8 @@ public class RfqController {
     public ResponseEntity<?> joinRfq(@PathVariable Long rfqId, @RequestParam Long supplierId) {
         try {
             Participation p = rfqService.joinRfq(rfqId, supplierId);
-            return ResponseEntity.ok(Map.of("message", "Successfully joined RFQ", "participationId", p.getParticipationId()));
+            return ResponseEntity
+                    .ok(Map.of("message", "Successfully joined RFQ", "participationId", p.getParticipationId()));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }

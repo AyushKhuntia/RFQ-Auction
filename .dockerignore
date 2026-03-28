@@ -6,6 +6,5 @@ target/
 mvnw
 mvnw.cmd
 *.md
-docker-compose.yml
 Dockerfile
 .dockerignore
